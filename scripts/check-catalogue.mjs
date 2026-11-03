@@ -30,6 +30,13 @@ for (const file of files) {
   }
   seenByFile.set(file, destinations.size);
 }
+for (const file of files) {
+  const content = readFileSync(resolve(root, file), 'utf8');
+  if (content.includes('https://github.com/hyperpolymath/polystack/') ||
+      content.includes('https://github.com/hyperpolymath/poly-ssg/')) {
+    errors.push(file + ': contains link to a private repository; public readers will see 404');
+  }
+}
 const readme = readFileSync(resolve(root, 'README.md'), 'utf8');
 for (const disclaimer of ['starter collection', 'not', 'Polystack']) {
   if (!readme.toLowerCase().includes(disclaimer.toLowerCase())) {

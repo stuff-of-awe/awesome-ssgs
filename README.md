@@ -29,9 +29,9 @@ These entries are useful for studying SSG design across programming languages. T
 | [SSG Collection: seven larger experiments](https://github.com/hyperpolymath/ssg-collection/tree/main/implementations) | Eclipse, Hackenbush, Odd, Pharos, QED, Rats, Wokelang | Larger source trees **as classified by file count**, not independently certified builds |
 | [SSG Collection: thirteen smaller variants](https://github.com/hyperpolymath/ssg-collection/tree/main/variants) | Includes Befunge, Gleam/Sparkle, WAT/Wagasm and Zig/Zigzag | Experimental code and sketches; capabilities vary |
 | [SSG Collection: thirty-two stubs](https://github.com/hyperpolymath/ssg-collection/tree/main/stubs) | Broader language and design ideas | **Scaffolds only; not recommended as generators** |
-| [Poly SSG legacy sources](https://github.com/hyperpolymath/polystack/tree/main/poly-ssg) | Comparison UI, engines, adapters, MCP/LSP and site-building assets | Preservation/migration in progress; **do not delete or assume BoJ replacement works** |
+| Poly SSG historical framework (private source; [public migration tracker](https://github.com/hyperpolymath/boj-server-cartridges/issues/165)) | Comparison UI, engines, adapters, MCP/LSP and site-building assets | Preservation/migration in progress; **not a publicly downloadable generator** |
 
-The Polystack migration is tracked in [preservation issue #30](https://github.com/hyperpolymath/polystack/issues/30). The public list is **not** the runtime for BoJ and does not establish that an SSG cartridge can build or deploy a site.
+Polystack has a private preservation blocker; public compatibility status is tracked in [BoJ issue #165](https://github.com/hyperpolymath/boj-server-cartridges/issues/165). The public list is **not** the runtime for BoJ and does not establish that an SSG cartridge can build or deploy a site.
 
 ## Compare generators usefully
 

@@ -26,4 +26,4 @@ Our own tools receive no preference. Disclose personal/organisational affiliatio
 
 Text submissions are accepted under the collection's [CC BY-SA 4.0 licence](LICENSES/CC-BY-SA-4.0.txt). External code retains its own licence; never copy third-party code into this list just to demonstrate a build.
 
-For Polystack-derived projects, respect [the preservation blocker](https://github.com/hyperpolymath/polystack/issues/30): source and build-system migration is separate from this curated list.
+For Polystack-derived projects, respect [the public BoJ migration tracker](https://github.com/hyperpolymath/boj-server-cartridges/issues/165): source and build-system migration is separate from this curated list.
