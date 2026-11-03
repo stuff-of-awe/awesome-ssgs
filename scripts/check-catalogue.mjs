@@ -35,6 +35,10 @@ export function markdownUrls(markdown) {
   return urls;
 }
 
+export function hasPrivateSourceLink(source) {
+  return /https:\/\/github\.com\/hyperpolymath\/(?:polystack|poly-ssg)(?![\w-])/i.test(source);
+}
+
 export function hasTruthfulStatus(readme) {
   return /^>\s+\*\*Status: starter collection\b/m.test(readme) &&
     /has \*\*not\*\* independently built every tool/.test(readme) &&
@@ -63,7 +67,7 @@ export function validateCatalogue(root) {
     if (!source.includes('SPDX-License-Identifier: CC-BY-SA-4.0')) {
       errors.push(shown + ': missing attribution/licence marker');
     }
-    if (/https:\/\/github\.com\/hyperpolymath\/(?:polystack|poly-ssg)\//.test(source)) {
+    if (hasPrivateSourceLink(source)) {
       errors.push(shown + ': link to private staging/source repository will yield public 404');
     }
     for (const link of markdownUrls(source)) {
