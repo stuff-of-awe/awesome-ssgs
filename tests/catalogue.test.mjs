@@ -23,7 +23,7 @@ test('reference-style links are extracted while fenced examples are ignored', ()
     '~~~',
     '[with title](notes.md "note")',
   ].join('\n');
-  assert.deepEqual(markdownUrls(content), ['../LICENSES/CC-BY-SA-4.0.txt', '.', 'notes.md']);
+  assert.deepEqual(markdownUrls(content), ['.', '../LICENSES/CC-BY-SA-4.0.txt', 'notes.md']);
 });
 
 test('a generic word not is insufficient to pass the status gate', () => {
