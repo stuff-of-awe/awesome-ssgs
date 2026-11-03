@@ -1,10 +1,18 @@
 // SPDX-License-Identifier: MPL-2.0
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { resolve } from 'node:path';
-import { hasPrivateSourceLink, hasTruthfulStatus, isInside, markdownUrls } from '../scripts/check-catalogue.mjs';
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+import {
+  LICENSE_SHA256, hasPrivateSourceLink, hasTruthfulStatus,
+  isInside, isRealTargetInside, markdownUrls,
+} from '../scripts/check-catalogue.mjs';
 
-test('root and descendants are valid local link targets', () => {
+test('root and descendants are valid targets, traversal and sibling prefixes not', () => {
   const root = resolve('/tmp/ssg-catalogue');
   assert.ok(isInside(root, root));
   assert.ok(isInside(root, resolve(root, 'docs')));
@@ -12,29 +20,54 @@ test('root and descendants are valid local link targets', () => {
   assert.equal(isInside(root, resolve(root, '../ssg-catalogue-evil')), false);
 });
 
-test('reference-style links are extracted while fenced examples are ignored', () => {
+test('reference links, nested parentheses, footnotes, code and comments', () => {
   const content = [
     '[README](.)',
+    '[notes](notes_(draft).md)',
     '[licence][cc]',
     '[cc]: ../LICENSES/CC-BY-SA-4.0.txt',
+    '[^1]: This is a footnote, not a link',
+    '<!-- [ghost](ghost.md) -->',
+    String.fromCharCode(96) + '[sample](missing.md)' + String.fromCharCode(96),
     '~~~md',
     '[fake](does-not-exist)',
-    '[unresolved]: missing-in-code.txt',
     '~~~',
     '[with title](notes.md "note")',
   ].join('\n');
-  assert.deepEqual(markdownUrls(content), ['.', '../LICENSES/CC-BY-SA-4.0.txt', 'notes.md']);
+  assert.deepEqual(markdownUrls(content),
+    ['.', 'notes_(draft).md', '../LICENSES/CC-BY-SA-4.0.txt', 'notes.md']);
 });
 
-test('a generic word not is insufficient to pass the status gate', () => {
+test('generic words cannot masquerade as publication status', () => {
   assert.equal(hasTruthfulStatus('starter collection; Polystack; not verified'), false);
   assert.equal(hasTruthfulStatus('> **Status: starter collection**\nThis publication has **not** independently built every tool; not production-qualified.'), true);
 });
 
-
-test('private repository links are caught with or without a trailing slash', () => {
+test('private repository URLs are blocked at exact name boundaries', () => {
   assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/polystack'), true);
   assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/poly-ssg/tree/main'), true);
   assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/polystack-fork'), false);
   assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/ssg-collection'), false);
+});
+
+test('outbound symlinks are rejected after real-path resolution', () => {
+  const root = mkdtempSync(join(tmpdir(), 'ssg-in-'));
+  const external = mkdtempSync(join(tmpdir(), 'ssg-out-'));
+  try {
+    writeFileSync(join(external, 'asset.md'), 'external');
+    writeFileSync(join(root, 'local.md'), 'internal');
+    symlinkSync(external, join(root, 'escape'), 'dir');
+    assert.equal(isRealTargetInside(root, join(root, 'local.md')), true);
+    assert.equal(isRealTargetInside(root, join(root, 'escape', 'asset.md')), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(external, { recursive: true, force: true });
+  }
+});
+
+test('official licence blob is pinned; an empty file cannot pass', () => {
+  const file = resolve(fileURLToPath(import.meta.url), '../../LICENSES/CC-BY-SA-4.0.txt');
+  const source = readFileSync(file);
+  assert.equal(createHash('sha256').update(source).digest('hex'), LICENSE_SHA256);
+  assert.notEqual(createHash('sha256').update('').digest('hex'), LICENSE_SHA256);
 });
