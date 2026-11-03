@@ -37,8 +37,8 @@ export function markdownUrls(markdown) {
     if (definition) urls.push(definition[1] || definition[2]);
 
     // GitHub Markdown allows raw HTML links and images.
-    for (const tag of line.matchAll(/<\\s*(?:a|img|link|source|video)\\b[^>]*>/gi)) {
-      for (const attribute of tag[0].matchAll(/\\b(?:href|src)\\s*=\\s*(["'])(.*?)\\1/gi)) {
+    for (const tag of line.matchAll(/<\s*(?:a|img|link|source|video)\b[^>]*>/gi)) {
+      for (const attribute of tag[0].matchAll(/\b(?:href|src)\s*=\s*(["'])(.*?)\1/gi)) {
         urls.push(attribute[2]);
       }
     }
@@ -53,8 +53,8 @@ export function markdownUrls(markdown) {
         const ch = line[end];
         if (ch === '\\' && end + 1 < line.length) { end++; continue; }
         // At depth one, a whitespace-delimited title is not part of the URL.
-        if (!inTitle && depth === 1 && /\\s/.test(ch) && /^\\s*["']/.test(line.slice(end))) {
-          end += (line.slice(end).match(/^\\s*/)?.[0].length ?? 0);
+        if (!inTitle && depth === 1 && /\s/.test(ch) && /^\s*["']/.test(line.slice(end))) {
+          end += (line.slice(end).match(/^\s*/)?.[0].length ?? 0);
           inTitle = line[end];
           continue;
         }
