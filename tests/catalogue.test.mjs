@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
-import { hasTruthfulStatus, isInside, markdownUrls } from '../scripts/check-catalogue.mjs';
+import { hasPrivateSourceLink, hasTruthfulStatus, isInside, markdownUrls } from '../scripts/check-catalogue.mjs';
 
 test('root and descendants are valid local link targets', () => {
   const root = resolve('/tmp/ssg-catalogue');
@@ -28,5 +28,13 @@ test('reference-style links are extracted while fenced examples are ignored', ()
 
 test('a generic word not is insufficient to pass the status gate', () => {
   assert.equal(hasTruthfulStatus('starter collection; Polystack; not verified'), false);
-  assert.equal(hasTruthfulStatus('> **Status: starter collection**\nWe have **not** independently built every tool; not production-qualified.'), true);
+  assert.equal(hasTruthfulStatus('> **Status: starter collection**\nThis publication has **not** independently built every tool; not production-qualified.'), true);
+});
+
+
+test('private repository links are caught with or without a trailing slash', () => {
+  assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/polystack'), true);
+  assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/poly-ssg/tree/main'), true);
+  assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/polystack-fork'), false);
+  assert.equal(hasPrivateSourceLink('https://github.com/hyperpolymath/ssg-collection'), false);
 });
