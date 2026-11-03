@@ -33,9 +33,13 @@ test('reference links, nested parentheses, footnotes, code and comments', () => 
     '[fake](does-not-exist)',
     '~~~',
     '[with title](notes.md "note")',
+    '[quoted parenthesis](missing.md "draft (old")',
+    '[external](//cdn.example.com/asset.svg)',
+    '<img src="assets/missing.png">',
+    '<a href="guide.html">Link</a>',
   ].join('\n');
   assert.deepEqual(markdownUrls(content),
-    ['.', 'notes_(draft).md', '../LICENSES/CC-BY-SA-4.0.txt', 'notes.md']);
+    ['.', 'notes_(draft).md', '../LICENSES/CC-BY-SA-4.0.txt', 'notes.md', 'missing.md', '//cdn.example.com/asset.svg', 'assets/missing.png', 'guide.html']);
 });
 
 test('generic words cannot masquerade as publication status', () => {
@@ -68,6 +72,13 @@ test('outbound symlinks are rejected after real-path resolution', () => {
 test('official licence blob is pinned; an empty file cannot pass', () => {
   const file = resolve(fileURLToPath(import.meta.url), '../../LICENSES/CC-BY-SA-4.0.txt');
   const source = readFileSync(file);
-  assert.equal(createHash('sha256').update(source).digest('hex'), LICENSE_SHA256);
+  assert.equal(createHash('sha256').update(source.toString('utf8').replace(/\r\n/g, '\n')).digest('hex'), LICENSE_SHA256);
   assert.notEqual(createHash('sha256').update('').digest('hex'), LICENSE_SHA256);
+});
+
+
+test('CRLF-normalized official licence is stable', () => {
+  const file = resolve(fileURLToPath(import.meta.url), '../../LICENSES/CC-BY-SA-4.0.txt');
+  const source = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  assert.equal(createHash('sha256').update(source.replace(/\n/g, '\r\n').replace(/\r\n/g, '\n')).digest('hex'), LICENSE_SHA256);
 });

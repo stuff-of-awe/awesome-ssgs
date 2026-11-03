@@ -36,14 +36,29 @@ export function markdownUrls(markdown) {
     const definition = /^\s{0,3}\[(?!\^)[^\]]+\]:\s*(?:<([^>]+)>|(\S+))/.exec(line);
     if (definition) urls.push(definition[1] || definition[2]);
 
+    // GitHub Markdown allows raw HTML links and images.
+    for (const tag of line.matchAll(/<\\s*(?:a|img|link|source|video)\\b[^>]*>/gi)) {
+      for (const attribute of tag[0].matchAll(/\\b(?:href|src)\\s*=\\s*(["'])(.*?)\\1/gi)) {
+        urls.push(attribute[2]);
+      }
+    }
+
     // Find inline link/image starts; balance nested parentheses in destinations.
     for (const match of line.matchAll(/!?\[[^\]]*\]\(/g)) {
       const start = match.index + match[0].length;
       let depth = 1;
       let end = start;
+      let inTitle = null;
       for (; end < line.length && depth > 0; end++) {
         const ch = line[end];
         if (ch === '\\' && end + 1 < line.length) { end++; continue; }
+        // At depth one, a whitespace-delimited title is not part of the URL.
+        if (!inTitle && depth === 1 && /\\s/.test(ch) && /^\\s*["']/.test(line.slice(end))) {
+          end += (line.slice(end).match(/^\\s*/)?.[0].length ?? 0);
+          inTitle = line[end];
+          continue;
+        }
+        if (inTitle) { if (ch === inTitle) inTitle = null; continue; }
         if (ch === '(') depth++;
         if (ch === ')') depth--;
       }
@@ -106,7 +121,7 @@ export function validateCatalogue(root) {
     }
     for (const url of markdownUrls(source)) {
       linkCount++;
-      if (/^(https?:|mailto:)/i.test(url) || url.startsWith('#')) continue;
+      if (/^(https?:|mailto:)/i.test(url) || url.startsWith('#') || url.startsWith('//')) continue;
       if (/^[a-z][a-z0-9+.-]*:/i.test(url)) {
         errors.push(shown + ': unsupported link scheme: ' + url);
         continue;
@@ -126,7 +141,7 @@ export function validateCatalogue(root) {
   }
   const license = resolve(root, 'LICENSES/CC-BY-SA-4.0.txt');
   if (!existsSync(license)) errors.push('Missing CC BY-SA 4.0 licence text');
-  else if (createHash('sha256').update(readFileSync(license)).digest('hex') !== LICENSE_SHA256) {
+  else if (createHash('sha256').update(readFileSync(license, 'utf8').replace(/\r\n/g, '\n')).digest('hex') !== LICENSE_SHA256) {
     errors.push('CC BY-SA 4.0 licence contents differ from pinned original');
   }
   return { errors, docs: docs.length, links: linkCount };
