@@ -1,0 +1,29 @@
+name: "00 - SSG catalogue tests"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "docs/**"
+      - "LICENSES/**"
+      - "scripts/**"
+      - ".github/workflows/curation-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  catalogue:
+    name: "00 - catalogue checks (local)"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (pinned GitHub action)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate local catalogue and attribution links
+        run: node scripts/check-catalogue.mjs
