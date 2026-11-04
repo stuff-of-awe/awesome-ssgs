@@ -43,6 +43,6 @@ Follow the collection's [contribution guidance](../CONTRIBUTING.md): distinguish
 
 A retained historical implementation can still teach something valuable. Identify its source, authorship, licence and known limitations, and explain the idea a reader can investigate. Preserve uncertainty when there is no runnable example or when an advertised property has not been checked.
 
-For a new contribution, a concise result is enough: **task, source version, command, observed output, failure behaviour, and limitations**. Add the canonical source link and disclose any affiliation. This gives the next reader a practical starting point and a clear boundary around the evidence.
+For a comparison record, a concise result is enough: **task, source version, command, observed output, failure behaviour, and limitations**. Add the canonical source link and disclose any affiliation. This gives the next reader a practical starting point and a clear boundary around the evidence. A new catalogue entry must also meet every requirement in [An acceptable new entry](../CONTRIBUTING.md#an-acceptable-new-entry).
 
 Return to the [generator collection](../README.md) or read the [source and verification ledger](SOURCE-MAP.md).
