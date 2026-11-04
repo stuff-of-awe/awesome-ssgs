@@ -39,6 +39,8 @@ When choosing or reviewing an SSG, record the source format (Markdown, AsciiDoc,
 
 For experimental SSGs, also distinguish a language-specific core implementation from wrappers, generated files and a generic template. An SSG repository with a manifest or README but no exercised source-to-HTML path belongs in the *experimental* or *historical* category.
 
+Use [Comparing static-site generators through one publishing task](docs/COMPARISON-NOTES.md) for a repeatable example, an evidence checklist and a way to study implementation choices without overstating what a build proves.
+
 ## Existing lists and discovery
 
 - [Jamstack's generator index](https://jamstack.org/generators/) — broad discovery across popular tools.
