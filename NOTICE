@@ -1,0 +1,24 @@
+awesome-ssgs - a Stuff of Awe collection
+https://github.com/stuff-of-awe/awesome-ssgs
+
+LICENSING
+
+This collection uses two licences, split by the kind of file.
+
+  1. PROSE                                        CC-BY-SA-4.0
+     README, CONTRIBUTING and other documentation and curation text.
+     Full text: LICENSE (also in LICENSES/CC-BY-SA-4.0.txt)
+
+  2. CODE AND CONFIGURATION                       MPL-2.0
+     Configuration under .github/, workflows, scripts and any other code.
+     Full text: LICENSES/MPL-2.0.txt
+     In this repository this includes:
+       .github/workflows/curation-gate.yml
+       scripts/check-catalogue.mjs
+       tests/catalogue.test.mjs
+
+The SPDX-License-Identifier header in each file is authoritative for that
+file.
+
+Linked third-party projects, resources and papers keep their own licences.
+Listing them in this collection does not relicense them.

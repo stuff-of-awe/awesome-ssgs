@@ -53,4 +53,4 @@ Our distinct remit is **comparative evidence, experimental languages and formal-
 
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SOURCE-MAP.md](docs/SOURCE-MAP.md) and [Stuff of Awe's maintenance policy](https://github.com/stuff-of-awe/.github/blob/main/docs/collections/MAINTENANCE.adoc). Add independent work freely; declare your affiliation with any project you submit. A maintainer should review links quarterly and record tested commands before upgrading any entry to "verified".
 
-Text and original curation: [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt). Linked software and third-party content retain their own licences and attribution.
+Text and original curation: [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt). Linked software and third-party content retain their own licences and attribution. Scripts, tests and configuration are MPL-2.0; see [NOTICE](NOTICE).
